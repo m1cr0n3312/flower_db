@@ -81,3 +81,66 @@ INSERT INTO order_items (order_id, flower_id, kol_flower, product_id, kol_produc
 (1, NULL, 0, 3, 1),    -- 1 открытка
 (2, 3, 10, NULL, 0),   -- 10 желтых тюльпанов
 (2, NULL, 0, 4, 2);    -- 2 ленты
+
+
+
+
+-- Создаем базу данных
+CREATE DATABASE flower_shop;
+GO
+
+USE flower_shop;
+GO
+
+-- 1. Таблица цветов
+CREATE TABLE flowers (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    name NVARCHAR(100) NOT NULL,
+    color NVARCHAR(50) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    in_stock BIT DEFAULT 1
+);
+GO
+
+-- 2. Таблица товаров
+CREATE TABLE products (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    name NVARCHAR(100) NOT NULL,
+    category NVARCHAR(50) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    in_stock BIT DEFAULT 1
+);
+GO
+
+-- 3. Таблица клиентов
+CREATE TABLE clients (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    name NVARCHAR(50) NOT NULL,
+    surname NVARCHAR(50) NOT NULL,
+    phone NVARCHAR(20) UNIQUE NOT NULL
+);
+GO
+
+-- 4. Таблица заказов
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY IDENTITY(1,1),
+    client_id INT NOT NULL,
+    date DATE NOT NULL,
+    status NVARCHAR(20) DEFAULT 'новый',
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+GO
+
+-- 5. Таблица состава заказа
+CREATE TABLE order_items (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    order_id INT NOT NULL,
+    flower_id INT NULL,
+    kol_flower INT DEFAULT 0,
+    product_id INT NULL,
+    kol_product INT DEFAULT 0,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (flower_id) REFERENCES flowers(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+GO
